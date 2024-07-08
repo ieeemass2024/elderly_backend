@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.elderlycare.mapper.ElderlyMapper">
+
+    <!--Elderly selectEventByIdByStep2(Long elderlyId);-->
+    <select id="selectEventByIdByStep2" resultType="Elderly">
+        select *
+        from `elderly`
+        where elderly_id = #{elderlyId}
+    </select>
+
+    <!--int countByAgeLessThan(@Param("elderlyAgeLowerLimits") Integer elderlyAgeLowerLimits);-->
+    <select id="countByAgeLessThan" resultType="int">
+        SELECT COUNT(*)
+        FROM `elderly`
+        WHERE DATE_FORMAT(birthday, '%Y-%m-%d') >
+              DATE_FORMAT(DATE_SUB(CURRENT_DATE, INTERVAL #{elderlyAgeLowerLimits} YEAR), '%Y-%m-%d')
+    </select>
+
+    <!--int countByAgeGreaterThanEqual(@Param("elderlyAgeUpperLimits") Integer elderlyAgeUpperLimits);-->
+    <select id="countByAgeGreaterThanEqual" resultType="int">
+        SELECT COUNT(*)
+        FROM `elderly`
+        WHERE DATE_FORMAT(birthday, '%Y-%m-%d') &lt;=
+              DATE_FORMAT(DATE_SUB(CURRENT_DATE, INTERVAL #{elderlyAgeUpperLimits} YEAR), '%Y-%m-%d')
+    </select>
+
+    <!--int countByAgeBetween(@Param("elderlyAgeLow") Integer elderlyAgeLow, @Param("elderlyAgeHigh") Integer elderlyAgeHigh);-->
+    <select id="countByAgeBetween" resultType="int">
+        SELECT COUNT(*)
+        FROM `elderly`
+        WHERE DATE_FORMAT(birthday, '%Y-%m-%d')
+                  BETWEEN DATE_FORMAT(DATE_SUB(CURRENT_DATE, INTERVAL #{elderlyAgeHigh} YEAR), '%Y-%m-%d')
+                  AND DATE_FORMAT(DATE_SUB(CURRENT_DATE, INTERVAL #{elderlyAgeLow} YEAR), '%Y-%m-%d');
+    </select>
+
+</mapper>

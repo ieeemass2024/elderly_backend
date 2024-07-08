@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.elderlycare.mapper.EventMapper">
+
+    <resultMap id="eventByIdByStepResultMap" type="Event">
+        <id column="event_id" property="eventId"></id>
+        <result column="event_type" property="eventType"></result>
+        <result column="event_date" property="eventDate"></result>
+        <result column="event_location" property="eventLocation"></result>
+        <result column="event_desc" property="eventDescription"></result>
+        <association property="elderly"
+                     select="com.elderlycare.mapper.ElderlyMapper.selectEventByIdByStep2"
+                     column="elderly_id"></association>
+    </resultMap>
+
+    <!--Event selectEventByIdByStep1(@Param("eventId") Long eventId);-->
+    <select id="selectEventByIdByStep1" resultMap="eventByIdByStepResultMap">
+        select * from `event` where event_id = #{eventId}
+    </select>
+
+    <!--int countEventMonth(@Param("year") Integer year, @Param("month") Integer month);-->
+    <select id="countEventMonth" resultType="int">
+        SELECT count(*)
+        FROM `event`
+        WHERE YEAR(event_date) = #{year} and MONTH(event_date) = #{month}
+    </select>
+
+    <resultMap id="eventCountByLocationResultMap" type="EventStatistic">
+        <id column="event_count" property="eventCount"></id>
+        <result column="event_location" property="eventLocation"></result>
+    </resultMap>
+
+    <!--List<EventStatistic> countEventLocation(@Param("year") Integer year);-->
+    <select id="countEventLocation" resultMap="eventCountByLocationResultMap">
+        SELECT count(*) AS event_count, event_location
+        FROM `event`
+        WHERE YEAR(event_date) = #{year}
+        GROUP BY event_location
+    </select>
+
+    <select id="countEventType" resultType="com.elderlycare.entity.EventStatistic">
+        SELECT event_type AS eventType, COUNT(*) AS eventCount
+        FROM `event`
+        WHERE YEAR(event_date) = #{year}
+        GROUP BY event_type
+    </select>
+
+</mapper>

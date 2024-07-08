@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.elderlycare.mapper.VolunteerMapper">
+
+    <!--int countVolunteerCheckInMonth(@Param("year") Integer year, @Param("month") Integer month);-->
+    <select id="countVolunteerCheckInMonth" resultType="int">
+        SELECT count(*)
+        FROM `volunteer`
+        WHERE YEAR(checkin_date) = #{year} and MONTH(checkin_date) = #{month}
+    </select>
+
+    <!--int countVolunteerCheckOutMonth(@Param("year") Integer year, @Param("month") Integer month);-->
+    <select id="countVolunteerCheckOutMonth" resultType="int">
+        SELECT count(*)
+        FROM `volunteer`
+        WHERE YEAR(checkout_date) = #{year} and MONTH(checkout_date) = #{month}
+    </select>
+
+</mapper>
